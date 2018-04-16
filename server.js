@@ -36,7 +36,7 @@ app.post('/create-user',function (req,res,next) {
 });
 
 app.get('/', function (req,res) {
-   res.render('home');
+   res.render('main/home');
 });
 app.listen(3000, function (err) {
     if(err) throw err;
