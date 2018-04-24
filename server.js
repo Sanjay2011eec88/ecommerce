@@ -15,6 +15,7 @@ mongoose.connect('mongodb://localhost:27017/ecommerce', function (err) {
    }
 });
 
+app.use(express.static(__dirname + '/public'));
 //To log the routes
 app.use(morgan('dev'));
 
@@ -23,21 +24,11 @@ app.use(bodyParser.urlencoded({encoded: true}));
 app.engine('ejs',ejsMate);
 app.set('view engine', 'ejs');
 
-app.post('/create-user',function (req,res,next) {
-   var user = new User();
-   user.profile.name = req.body.name;
-   user.password =req.body.password;
-   user.email = req.body.email;
+var mainRoutes = require('./routes/main');
+var userRoutes = require('./routes/user');
+app.use(mainRoutes);
+app.use(userRoutes);
 
-   user.save(function (err) {
-       if(err) return next(err);
-       res.json("Successfully created a new user");
-   });
-});
-
-app.get('/', function (req,res) {
-   res.render('main/home');
-});
 app.listen(3000, function (err) {
     if(err) throw err;
     console.log("Server is running");
