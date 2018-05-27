@@ -1,6 +1,10 @@
 var router = require('express').Router();
 var User = require('../models/user');
 
+router.get('/signup',function(req,res,next){
+    res.render('accounts/signup')
+})
+
 router.post('/signup',function (req,res,next) {
     var user = new User();
     user.profile.name = req.body.name;
