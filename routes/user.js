@@ -1,5 +1,27 @@
 var router = require('express').Router();
 var User = require('../models/user');
+var passport = require('passport');
+var passportConfig = require('../config/passport');
+
+router.get('/login', function(req, res){
+    if(req.user) return res.redirect('/');// If user is logged in it goes to home route otherwise it redirect to login page
+    res.render('accounts/login',{ message: req.flash('loginMessage')});
+})
+
+router.post('/login',passport.authenticate('local-login',{
+    successRedirect: '/profile',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
+
+router.get('/profile',function(req,res,next){
+    User.find({_id:req.user._id},function(err, user){
+        if(err){
+            return next(err);
+        }
+        res.render('accounts/profile', {user : user});
+    });
+});
 
 router.get('/signup',function(req,res,next){
     res.render('accounts/signup',{
@@ -12,11 +34,8 @@ router.post('/signup',function (req,res,next) {
     user.profile.name = req.body.name;
     user.password =req.body.password;
     user.email = req.body.email;
-
-
     User.findOne({ email: req.body.email }, function (err, existingUser) {
        if(existingUser){
-        //    console.log(req.body.email + " is already exist");
            req.flash('errors','Account with that email address already exists');
            return res.redirect('/signup');
        }else{
