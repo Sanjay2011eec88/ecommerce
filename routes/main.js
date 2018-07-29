@@ -55,7 +55,6 @@ router.get('/search', function(req, res, next) {
       Product.search({
         query_string: { query: req.query.q}
       }, function(err, results) {
-        results:
         if (err) return next(err);
         var data = results.hits.hits.map(function(hit) {
           return hit;
@@ -78,7 +77,7 @@ router.get('/', function (req,res,next) {
 
 router.get('/page/:page', function(req,res,next){
     paginate(req,res,next);
-})
+});
 
 router.get('/products/:id',function(req,res,next){
     console.log(req.params.id);
